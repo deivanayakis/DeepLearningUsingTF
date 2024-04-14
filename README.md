@@ -47,5 +47,20 @@ if y_train[0] is 5, after applying to_categorical, it will be represented as [0,
 
 model = Sequential()
 
+It allows us to easily build neural networks by adding layers one by one in sequence i.e help to create linear stack of layers
 
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(28, 28, 1)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
+The convolutional layers extract features from the input images, and the max pooling layers reduce spatial dimensions by retaining the most important information (corners, shapes, edges, etc..).
+
+model.add(Flatten())
+
+It reshapes the multi-dimensional input into a one-dimensional array. This is important because following layers like Dense need one dimensional input.
+
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
 
