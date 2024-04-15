@@ -74,3 +74,34 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 Compiling the model configuring the learning process of model, it should be done before training the model. It takes metrics argument such loss function, optimizer and metrics.
 Loss function tells how good a neural network model is in performing a certain task. categorical_crossentropy is used for multiclass classification.
 Adam optimizer means Adaptive moment estimation, it is an iterative optimization algorithm which is used to minimize the loss function while training the model.
+Accuracy metrics calculates how model equals prediction with actual labels.
+
+# f) Training the Model
+
+model.fit(X_train, y_train, epochs=20,batch_size=64)
+
+epoch means number of times the training data is used for train the model and batch size refers number of samples processed.
+
+# g) Evaluating the Model
+
+test_loss, test_acc = model.evaluate(X_test, y_test)
+print('Test accuracy:', test_acc)
+
+Trained Model is evaluated by applying the testing dataset.
+
+# h) Predict the label for given image
+
+from PIL import Image
+img = Image.open('/content/7.jpg')
+img = img.resize((28, 28))
+img = img.convert('L')
+img_array = np.array(img)
+img_array = np.reshape(img_array, (1, 28, 28, 1))
+img_array = img_array.astype('float32') / 255.0
+pred = model.predict(img_array)
+predclass = np.argmax(pred)
+print("Predicted class:", predclass)
+
+Input image is read by specifing the path of that image and preprocess the image. Apply the preprocesses image numpy array to the model and predict the respective label.
+     
+
