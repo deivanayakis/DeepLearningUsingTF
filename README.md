@@ -64,3 +64,13 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(10, activation='softmax'))
 
+Droput Layer - Including the dropout layer helps to prevent overfitting, it randomly drops the neuron along with their connections
+Dense Layer - Each neuron of dense layer receives input from all the neurons of previous layer and it is used to classify the image based on output from previous layer.
+
+# e) Model Compilation
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+Compiling the model configuring the learning process of model, it should be done before training the model. It takes metrics argument such loss function, optimizer and metrics.
+Loss function tells how good a neural network model is in performing a certain task. categorical_crossentropy is used for multiclass classification.
+Adam optimizer means Adaptive moment estimation, it is an iterative optimization algorithm which is used to minimize the loss function while training the model.
