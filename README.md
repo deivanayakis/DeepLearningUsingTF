@@ -103,5 +103,76 @@ predclass = np.argmax(pred)
 print("Predicted class:", predclass)
 
 Input image is read by specifing the path of that image and preprocess the image. Apply the preprocesses image numpy array to the model and predict the respective label.
+
+
+# 2) Sentiment Analysis using TF_IDF encoding
+
+# a) Load the data 
+
+import pandas as pd
+df = pd.read_csv('/content/data.csv', encoding='iso-8859-1')
+df.head()
+
+# b) Preprocessing the text data
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+import re
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+nltk - Natural Language Toolkit (NLTK) for natural language processing tasks.
+nltk.corpus.stopwords - NLTK's stopwords corpus for removing common words that do not contribute much to text meaning.
+nltk.tokenize.word_tokenize - NLTK's word_tokenize function for splitting text into words or tokens.
+nltk.stem.WordNetLemmatizer - NLTK's WordNetLemmatizer for reducing words to their base or root form.
+
+def preprocess_text(text):
+    if isinstance(text, str):
+        text = text.lower()
+        text = re.sub(r'http\S+', '', text)
+        text = re.sub(r'[^a-zA-Z\s]', '', text)
+        tokens = word_tokenize(text)
+        stop_words = set(stopwords.words('english'))
+        tokens = [token for token in tokens if token not in stop_words]
+        tokens = [WordNetLemmatizer().lemmatize(token) for token in tokens]
+        preprocessed_text = ' '.join(tokens)
+    else:
+        preprocessed_text = ''
+    return preprocessed_text
+
+df['text'] = df['text'].apply(preprocess_text)
+df.head()
+
+# c) Construct the model
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+X_train, X_test, y_train, y_test = train_test_split(df['text'], df['sentiment'], test_size=0.2, random_state=42)
+tfidf = TfidfVectorizer(max_features=1000)
+X_train = tfidf.fit_transform(X_train)
+X_test = tfidf.transform(X_test)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy : ", accuracy)
+
+Split the data, apply the tfidf vectorization and build the model using Logistic regression.
+
+# d) Predict for the new text
+
+txt = preprocess_text("It is a Nice product!!")
+txt = tfidf.transform([txt])
+predicted_sentiment = model.predict(txt)
+print("Predicted Sentiment:", predicted_sentiment)
+
+O/p : Predicted Sentiment: ['positive']
+
      
 
